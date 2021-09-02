@@ -1,16 +1,24 @@
-import axios from 'axios';
-import { useEffect, useState } from 'react';
 import { ItemStarShip } from './ItemStarShip';
-
-export const ListStarShips = ({ response }) => {
-  console.log(response);
-  const finalList = response.map((item) => (
-    <ItemStarShip nameShip={item.name} model={item.model} key={item.model} />
+import imgLoading from '../../../assets/img/loadingImg.gif';
+import { Llistat } from './styled';
+export const ListStarShips = ({
+  response,
+  loading,
+  handleNextPage,
+  handleScroll,
+}) => {
+  const finalList = response.map((item, id) => (
+    <ItemStarShip key={id} nameShip={item.name} model={item.model} id={id} />
   ));
-  return (
-    <div>
-      <h1>List</h1>
-      {finalList}
+
+  return loading ? (
+    <div style={{ textAlign: 'center' }}>
+      <img src={imgLoading} />{' '}
     </div>
+  ) : (
+    <Llistat onScroll={handleScroll}>
+      {finalList}
+      <button onClick={handleNextPage}>Get next page</button>
+    </Llistat>
   );
 };

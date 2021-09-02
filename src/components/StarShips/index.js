@@ -1,21 +1,41 @@
 import { useState, useEffect } from 'react';
 import { ListStarShips } from './ListStarShips';
-import axios from 'axios';
+
+import { Switch, Route } from 'react-router-dom';
 import { DetailStartShip } from './DetailStartShip';
-
+import { useStarShipsCall } from '../../hooks';
 export const StarShips = () => {
-  const baseURL = 'https://swapi.dev/api/starships/';
-  const [responseStarShips, setResponseStarShips] = useState([{}]);
-  useEffect(() => {
-    axios.get(baseURL).then((response) => {
-      setResponseStarShips(response.data.results);
-    });
-  }, []);
-
+  const { responseStarShips, loading, setPage } = useStarShipsCall();
+  const handleNextPage = () => {
+    setPage((prePage) => prePage + 1);
+  };
+  const handleScroll = (event) => {
+    const { scrollTop, clientHeight, scrollHeight } = event.currentTarget;
+    console.log(scrollTop, 'scrollTop');
+    console.log(clientHeight, 'clienHeight');
+    console.log(scrollHeight, 'scrollHeight');
+    if (scrollHeight - scrollTop === clientHeight) {
+      setPage((prePage) => prePage + 1);
+    }
+  };
   return (
     <div>
-      {/* <ListStarShips response={responseStarShips} />{' '} */}
-      <DetailStartShip response={responseStarShips[0]} />
+      <Switch>
+        <Route path="/star-ships/:id">
+          <DetailStartShip
+            loading={loading}
+            arrayResponse={responseStarShips}
+          />
+        </Route>
+        <Route path="/star-ships/">
+          <ListStarShips
+            loading={loading}
+            handleNextPage={handleNextPage}
+            handleScroll={handleScroll}
+            response={responseStarShips}
+          />{' '}
+        </Route>
+      </Switch>
     </div>
   );
 };

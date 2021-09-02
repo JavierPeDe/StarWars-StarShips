@@ -1,13 +1,20 @@
-export const DetailStartShip = ({ response }) => {
-  return Object.entries(response).length === 0 ? (
-    <div></div>
-  ) : (
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { TableInfo, TitleInfo } from './style';
+import loadingImg from '../../../assets/img/loadingImg.gif';
+export const DetailStartShip = ({ arrayResponse, loading }) => {
+  var { id } = useParams();
+  const response = arrayResponse[id];
+  return loading === false ? (
     <div>
       <dt>
-        <h2>{response.name}</h2>
-        <h3>{response.model}</h3>
+        <TitleInfo>{response.name}</TitleInfo>
       </dt>
-      <div>
+      <TableInfo>
+        <div>
+          <dt>Model:</dt>
+          <dd>{response.model}</dd>
+        </div>
         <div>
           <dt>Manufacturer:</dt>
           <dd>{response.manufacture}</dd>
@@ -52,7 +59,11 @@ export const DetailStartShip = ({ response }) => {
           <dt>Class:</dt>
           <dd>{response.starship_class}</dd>
         </div>
-      </div>
+      </TableInfo>
+    </div>
+  ) : (
+    <div style={{ textAlign: 'center' }}>
+      <img src={loadingImg} />
     </div>
   );
 };
